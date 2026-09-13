@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DocIntel.API/DocIntel.API.csproj" />
+  <Project Path="DocIntel.Core/DocIntel.Core.csproj" />
+  <Project Path="DocIntel.Infrastructure/DocIntel.Infrastructure.csproj" />
+  <Project Path="DocIntel.Tests/DocIntel.Tests.csproj" />
+</Solution>
