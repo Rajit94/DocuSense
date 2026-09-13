@@ -427,3 +427,15 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+# Secrets — never commit these
+**/appsettings.Development.json
+**/*.user
+.env
+
+# Build outputs
+**/bin/
+**/obj/
+
+# VS files
+.vs/
+*.suo
