@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="AI\" />
     <Folder Include="Storage\" />
     <Folder Include="Processing\" />
