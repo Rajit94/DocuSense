@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="AI\" />
-    <Folder Include="Processing\" />
   </ItemGroup>
 
 </Project>
