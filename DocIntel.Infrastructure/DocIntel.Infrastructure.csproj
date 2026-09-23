@@ -21,8 +21,4 @@
     <ProjectReference Include="..\DocIntel.Core\DocIntel.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="AI\" />
-  </ItemGroup>
-
 </Project>
