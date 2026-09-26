@@ -10,6 +10,8 @@ public class AppUser : BaseEntity
 
     public string FirstName { get; set; } = string.Empty;
 
+    public string LastName { get; set; } = string.Empty;
+
     public UserRole Role { get; set; } = UserRole.Member;
 
    
