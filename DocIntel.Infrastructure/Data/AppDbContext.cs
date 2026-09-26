@@ -3,17 +3,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DocIntel.Infrastructure.Data;
 
-
 public class AppDbContext : DbContext
 {
-   
     private readonly Guid _workspaceId;
 
-    
-    public AppDbContext(DbContextOptions<AppDbContext> options, Guid workspaceId)
+    public AppDbContext(
+        DbContextOptions<AppDbContext> options,
+        Guid workspaceId)
         : base(options)
     {
         _workspaceId = workspaceId;
+    }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options)
+    {
+        _workspaceId = Guid.Empty;
     }
 
     public DbSet<Workspace> Workspaces => Set<Workspace>();
@@ -24,10 +29,8 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-       
         base.OnModelCreating(modelBuilder);
 
-      
         modelBuilder.Entity<Document>()
             .HasQueryFilter(d => d.WorkspaceId == _workspaceId);
 
@@ -40,7 +43,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<AppUser>()
             .HasQueryFilter(u => u.WorkspaceId == _workspaceId);
 
-       
         modelBuilder.Entity<Workspace>(entity =>
         {
             entity.HasKey(w => w.Id);
@@ -49,7 +51,6 @@ public class AppDbContext : DbContext
             entity.Property(w => w.Slug).IsRequired().HasMaxLength(50);
         });
 
-     
         modelBuilder.Entity<AppUser>(entity =>
         {
             entity.HasKey(u => u.Id);
@@ -57,15 +58,13 @@ public class AppDbContext : DbContext
             entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
             entity.Property(u => u.PasswordHash).IsRequired();
 
-         
             entity.HasOne(u => u.Workspace)
-                  .WithMany(w => w.Users)
-                  .HasForeignKey(u => u.WorkspaceId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(w => w.Users)
+                .HasForeignKey(u => u.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            
             entity.Property(u => u.Role)
-                  .HasConversion<string>();
+                .HasConversion<string>();
         });
 
         modelBuilder.Entity<Document>(entity =>
@@ -75,48 +74,39 @@ public class AppDbContext : DbContext
             entity.Property(d => d.BlobUrl).IsRequired();
             entity.Property(d => d.ContentType).IsRequired().HasMaxLength(100);
 
-           
             entity.Property(d => d.Status)
-                  .HasConversion<string>();
+                .HasConversion<string>();
 
-      
             entity.HasOne(d => d.Workspace)
-                  .WithMany(w => w.Documents)
-                  .HasForeignKey(d => d.WorkspaceId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(w => w.Documents)
+                .HasForeignKey(d => d.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-           
             entity.HasMany(d => d.Chunks)
-                  .WithOne(c => c.Document)
-                  .HasForeignKey(c => c.DocumentId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithOne(c => c.Document)
+                .HasForeignKey(c => c.DocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(d => d.ChatMessages)
-                  .WithOne(m => m.Document)
-                  .HasForeignKey(m => m.DocumentId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithOne(m => m.Document)
+                .HasForeignKey(m => m.DocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
-      
         modelBuilder.Entity<DocumentChunk>(entity =>
         {
             entity.HasKey(c => c.Id);
-
             entity.HasIndex(c => c.DocumentId);
-
             entity.HasIndex(c => c.WorkspaceId);
-
             entity.Property(c => c.EmbeddingJson)
-                  .HasColumnType("nvarchar(max)");
+                .HasColumnType("nvarchar(max)");
         });
 
-      
         modelBuilder.Entity<ChatMessage>(entity =>
         {
             entity.HasKey(m => m.Id);
             entity.Property(m => m.Role).IsRequired().HasMaxLength(20);
             entity.Property(m => m.Content).IsRequired();
-
             entity.HasIndex(m => m.DocumentId);
         });
     }
